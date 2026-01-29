@@ -3,16 +3,42 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { registerUser } from '@/services/authService';
 
 const Register = () => {
+  const router = useRouter();
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if(!name || !email || !password){
+        alert("All Feilds are Required. Please fill all the fields.");
+        return;
+      }
 
+      if(password.length < 6){
+        alert("Password should be at least 6 characters long.");
+        return;
+      }
+
+    try{
+      await registerUser(name, email, password);
+
+      alert("Registration Successful! Please login to continue.");
+      router.push('/(auth)/login'); 
+
+    }catch(error: any){
+
+      if(error.code === 'auth/email-already-in-use'){
+        alert("The email address is already in use by another account.");
+      }else{
+        alert("Registration failed. Please try again.");
+        console.log("Registration Error: ", error);
+      }
+    }
   };
 
   return (

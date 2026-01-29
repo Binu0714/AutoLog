@@ -1,22 +1,27 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter,Redirect } from 'expo-router';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+
+  if(user){
+
+  }
 
   return (
     <View className="flex-1 bg-[#121212]">
       <StatusBar barStyle="light-content" />
       
-      {/* Background Image Section */}
       <ImageBackground 
         source={{ uri: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1000&auto=format&fit=crop' }} 
         className="flex-1 justify-end"
         resizeMode="cover"
       >
-        {/* Gradient-like dark overlay to make text readable */}
+       
         <View className="bg-black/40 absolute inset-0" />
 
         <SafeAreaView className="p-8 pb-12">
@@ -50,7 +55,7 @@ export default function WelcomeScreen() {
           <TouchableOpacity 
             activeOpacity={0.9}
             className="bg-[#FACC15] py-5 rounded-full items-center mb-6"
-            onPress={() => router.push('/(auth)/register')}
+            onPress={() => router.push('/register')}
           >
             <Text className="text-black font-extrabold text-lg">Get Started</Text>
           </TouchableOpacity>
