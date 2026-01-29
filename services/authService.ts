@@ -22,3 +22,7 @@ export const registerUser = async (name: string, email: string, password: string
 
     return userCredentials;
 }
+
+export const loginUser = async (email: string, password: string) => {
+    return await signInWithEmailAndPassword(auth, email, password);
+}

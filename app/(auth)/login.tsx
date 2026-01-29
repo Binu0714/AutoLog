@@ -2,11 +2,42 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLoader } from '@/hooks/useLoader';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/services/firebase';
 
 export default function Login() {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  const { showLoader, hideLoader, isLoading } = useLoader();
+
+  const handleLogin = () => {
+    if (!email || !password || isLoading) {
+      alert("All Fields are Required. Please fill all the fields.");
+      return;
+    }
+
+    try{
+      await signInWithEmailAndPassword(auth, email, password);
+      // router.replace('/home');
+    }catch(error: any){
+      if(error.code === 'auth/user-not-found'){
+        alert("No user found with this email.");
+      }else if(error.code === 'auth/wrong-password'){
+        alert("Incorrect password. Please try again.");
+      }else if(error.code === 'auth/invalid-email'){
+        alert("The email address is badly formatted.");
+      }else{
+        alert("Login failed. Please try again.");
+        console.log("Login Error: ", error);
+      }
+    }finally{
+      hideLoader();
+    }
+  }
+  
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -56,6 +87,7 @@ export default function Login() {
             <TouchableOpacity 
               activeOpacity={0.8}
               className="bg-[#FACC15] py-5 rounded-full items-center mt-4 shadow-lg shadow-yellow-500/20"
+              onPress={ handleLogin }
             >
               <Text className="text-black font-extrabold text-lg">Log In</Text>
             </TouchableOpacity>
