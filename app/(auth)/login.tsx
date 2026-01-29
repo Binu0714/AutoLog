@@ -13,7 +13,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const { showLoader, hideLoader, isLoading } = useLoader();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password || isLoading) {
       alert("All Fields are Required. Please fill all the fields.");
       return;
@@ -22,6 +22,7 @@ export default function Login() {
     try{
       await signInWithEmailAndPassword(auth, email, password);
       // router.replace('/home');
+
     }catch(error: any){
       if(error.code === 'auth/user-not-found'){
         alert("No user found with this email.");
@@ -38,7 +39,6 @@ export default function Login() {
     }
   }
   
-
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
