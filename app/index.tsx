@@ -1,17 +1,28 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
+import "../global.css"
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, ImageBackground, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter,Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 
-export default function WelcomeScreen() {
+function WelcomeScreen() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  if(user){
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/login"); // your main app page
+    }
+  }, [user, loading]);
 
+  if (loading) {
+    return (
+      <View className="flex-1 bg-[#121212] justify-center items-center">
+        <ActivityIndicator size="large" color="#FACC15" />
+      </View>
+    );
   }
-
+  
   return (
     <View className="flex-1 bg-[#121212]">
       <StatusBar barStyle="light-content" />
@@ -61,7 +72,7 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
 
           {/* Secondary Link */}
-          <TouchableOpacity className="items-center" onPress={() => router.push('/(auth)/login')}>
+          <TouchableOpacity className="items-center" onPress={() => router.push('/login')}>
             <Text className="text-white/60 text-base">
               Already have an account? <Text className="text-[#FACC15] font-bold">Login</Text>
             </Text>
@@ -72,3 +83,5 @@ export default function WelcomeScreen() {
     </View>
   );
 }
+
+export default WelcomeScreen;

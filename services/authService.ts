@@ -20,5 +20,5 @@ export const registerUser = async (name: string, email: string, password: string
         createdAt: new Date()
     });
 
-    return userCredentials.user;
+    return userCredentials;
 }

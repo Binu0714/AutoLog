@@ -1,15 +1,27 @@
-import "../global.css";
-import { Stack } from "expo-router";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View } from 'react-native'
+import React from 'react'
+import { Slot } from 'expo-router'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { LoaderProvider } from '@/context/LoaderContext'
+import { AuthProvider } from '@/context/AuthContext'
 
-export default function RootLayout() {
+const RootLayout = () => {
+
+    const insets = useSafeAreaInsets()
+
+    console.log(insets)
+
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* These definitions help Expo Router find your screens */}
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
-      </Stack>
-    </SafeAreaProvider>
-  );
+    // <SafeAreaView className='flex-1'>
+    <LoaderProvider>
+      <AuthProvider>
+        <View style={{flex: 1}}>
+             <Slot />
+        </View>
+      </AuthProvider>
+    </LoaderProvider>
+    // </SafeAreaView>
+  )
 }
+
+export default RootLayout

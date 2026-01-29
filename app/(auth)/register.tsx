@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { registerUser } from '@/services/authService';
+import { useLoader } from '../../hooks/useLoader';  
+import { Alert } from "react-native";
 
 const Register = () => {
+
   const router = useRouter();
+  const { showLoader, hideLoader, isLoading} = useLoader()
   
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,7 +18,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async () => {
-    if(!name || !email || !password){
+    if(!name || !email || !password || isLoading){
         alert("All Feilds are Required. Please fill all the fields.");
         return;
       }
@@ -24,11 +28,11 @@ const Register = () => {
         return;
       }
 
+    showLoader();
+
     try{
       await registerUser(name, email, password);
-
-      alert("Registration Successful! Please login to continue.");
-      router.push('/(auth)/login'); 
+      router.replace('/login');
 
     }catch(error: any){
 
@@ -38,6 +42,8 @@ const Register = () => {
         alert("Registration failed. Please try again.");
         console.log("Registration Error: ", error);
       }
+    }finally{
+      hideLoader();
     }
   };
 
@@ -126,7 +132,7 @@ const Register = () => {
 
         <View className="flex-row justify-center mt-12 mb-10">
           <Text className="text-slate-400">Already have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
+          <TouchableOpacity onPress={() => router.push('/login')}>
             <Text className="text-[#FACC15] font-bold underline">Login</Text>
           </TouchableOpacity>
         </View>
