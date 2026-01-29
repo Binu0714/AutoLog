@@ -2,18 +2,23 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function Register() {
+const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleRegister = () => {
+
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <ScrollView className="px-8">
         
-        {/* Header Section */}
         <View className="mt-10">
           <TouchableOpacity onPress={() => router.back()} className="mb-8">
             <Text className="text-[#FACC15] text-lg font-bold">← Back</Text>
@@ -22,7 +27,6 @@ export default function Register() {
           <Text className="text-slate-400 text-lg mt-2">Create an account and simplify your ride.</Text>
         </View>
 
-        {/* Form Section */}
         <View className="mt-10 gap-y-5">
           <View>
             <Text className="text-slate-400 mb-2 ml-1">Full Name</Text>
@@ -49,25 +53,39 @@ export default function Register() {
 
           <View>
             <Text className="text-slate-400 mb-2 ml-1">Password</Text>
-            <TextInput
-              placeholder="Choose a password"
-              placeholderTextColor="#4b5563"
-              value={password}
-              onChangeText={setPassword}
-              className="bg-[#1E1E1E] p-5 rounded-2xl text-white border border-white/5 focus:border-[#FACC15]"
-              secureTextEntry
-            />
+            <View className="relative justify-center">
+              <TextInput
+                placeholder="Choose a password"
+                placeholderTextColor="#4b5563"
+                value={password}
+                onChangeText={setPassword}
+               
+                secureTextEntry={!showPassword}
+                className="bg-[#1E1E1E] p-5 pr-14 rounded-2xl text-white border border-white/5 focus:border-[#FACC15]"
+              />
+              
+              <TouchableOpacity 
+                onPress={() => setShowPassword(!showPassword)}
+                className="absolute right-4 p-2"
+              >
+                <Ionicons 
+                  name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                  size={22} 
+                  color="#FACC15" 
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <TouchableOpacity 
             activeOpacity={0.8}
             className="bg-[#FACC15] py-5 rounded-full items-center mt-6 shadow-lg shadow-yellow-500/20"
+            onPress={handleRegister}
           >
             <Text className="text-black font-extrabold text-lg">Create Account</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Social Logins Section */}
         <View className="mt-10">
             <Text className="text-slate-500 text-center mb-6">Or register with</Text>
             <View className="flex-row justify-between gap-x-4">
@@ -80,7 +98,6 @@ export default function Register() {
             </View>
         </View>
 
-        {/* Footer Link */}
         <View className="flex-row justify-center mt-12 mb-10">
           <Text className="text-slate-400">Already have an account? </Text>
           <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
@@ -90,5 +107,7 @@ export default function Register() {
 
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
+
+export default Register;
