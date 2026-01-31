@@ -21,7 +21,7 @@ export default function Login() {
 
     try{
       await signInWithEmailAndPassword(auth, email, password);
-      // router.replace('/home');
+      router.replace('/(dashboard)/1_home');
 
     }catch(error: any){
       if(error.code === 'auth/user-not-found'){
