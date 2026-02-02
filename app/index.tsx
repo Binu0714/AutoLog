@@ -11,7 +11,7 @@ function WelcomeScreen() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/home"); // your main app page
+      router.replace("/setup"); 
     }
   }, [user, loading]);
 

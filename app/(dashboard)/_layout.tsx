@@ -3,10 +3,10 @@ import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const tabs = [
-    { name: '1_home', icon: 'home', title: 'Home' },        // Changed from 'home' to 'index'
-    { name: '2_add', icon: 'add-circle', title: 'Add Log' },
-    { name: '3_history', icon: 'history', title: 'History' }, 
-    { name: '4_profile', icon: 'person', title: 'Profile' },  
+    { name: 'home', icon: 'home', title: 'Home' },        // Changed from 'home' to 'index'
+    { name: 'add', icon: 'add-circle', title: 'Add Log' },
+    { name: 'history', icon: 'history', title: 'History' }, 
+    { name: 'profile', icon: 'person', title: 'Profile' },  
 ] as const;
 
 const DashboardLayout = () => {
