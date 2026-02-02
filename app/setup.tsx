@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useLoader } from '@/hooks/useLoader';
+import { addVehicle } from '@/services/vehicleService';
 
 const vehicleTypes = [
   { id: 'car', label: 'Car', icon: 'car' },
@@ -17,17 +19,37 @@ export default function VehicleSetup() {
   const [plate, setPlate] = useState('');
   const [odo, setOdo] = useState('');
   const [nextService, setNextService] = useState('');
-  
-  const router = useRouter();
 
-  const handleFinish = () => {
+  const router = useRouter();
+  const { showLoader, hideLoader } = useLoader();
+
+  const handleFinish = async() => {
     if (!name || !plate || !odo || !nextService) {
       Alert.alert("Wait!", "Please fill in all details to finalize your profile.");
       return;
     }
-    // Logic to save to Firestore will go here
-    router.replace('/(dashboard)/home'); 
-  };
+   
+    showLoader();
+
+    try{
+        await addVehicle(
+            selectedType,
+            name,
+            plate,
+            parseInt(odo),
+            parseInt(nextService)
+        );
+       
+        alert("Your vehicle has been added successfully!");
+        router.replace("/(dashboard)/home")
+
+    }catch(error){
+        console.log("Error adding vehicle: ", error);
+        Alert.alert("Error", "There was an issue adding your vehicle. Please try again.");
+    }finally{
+        hideLoader();
+    } 
+};
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
