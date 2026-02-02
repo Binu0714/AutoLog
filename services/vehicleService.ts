@@ -39,6 +39,10 @@ export const getVehicleDetails = async () => {
 
     const snapshot = await getDocs(q);
 
+    if (snapshot.empty) {
+        return null;
+    }
+
     const vehicles = snapshot.docs.map((doc) => {
         const data = doc.data();
         return{

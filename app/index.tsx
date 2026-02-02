@@ -4,15 +4,37 @@ import { View, Text, TouchableOpacity, ImageBackground, StatusBar, ActivityIndic
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter,Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
+import { getVehicleDetails } from '@/services/vehicleService';
+import { useLoader } from '@/hooks/useLoader';
 
 function WelcomeScreen() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  const { showLoader, hideLoader } = useLoader();
 
   useEffect(() => {
-    if (!loading && user) {
-      router.replace("/setup"); 
+    const checkVehicleAndNavigate = async () => {
+      if(!loading && user){
+        showLoader();
+
+        try{
+          const vehicle = await getVehicleDetails();
+
+          if(vehicle){
+            router.replace('/(dashboard)/home');
+          }else{
+            router.replace('/setup');
+          }
+        }catch(error){
+          console.log("Error fetching vehicle details: ", error);
+          alert("There was an issue fetching your vehicle details. Please try again.");
+          router.replace('/setup');
+        }finally{
+          hideLoader();
+        }
+      }
     }
+    checkVehicleAndNavigate();
   }, [user, loading]);
 
   if (loading) {
