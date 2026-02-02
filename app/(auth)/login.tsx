@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLoader } from '@/hooks/useLoader';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/services/firebase';
+import { useAlert } from '@/context/alertContext';
 
 export default function Login() {
   const router = useRouter();
@@ -13,25 +14,27 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const { showLoader, hideLoader, isLoading } = useLoader();
 
+  const { showAlert } = useAlert();
+
   const handleLogin = async () => {
     if (!email || !password || isLoading) {
-      alert("All Fields are Required. Please fill all the fields.");
+      showAlert("Wait!", "All Fields are Required. Please fill all the fields.");
       return;
     }
 
     try{
       await signInWithEmailAndPassword(auth, email, password);
-      router.replace('/(dashboard)/1_home');
+      router.replace('/(dashboard)/home');
 
     }catch(error: any){
       if(error.code === 'auth/user-not-found'){
-        alert("No user found with this email.");
+        showAlert("Error", "No user found with this email.");
       }else if(error.code === 'auth/wrong-password'){
-        alert("Incorrect password. Please try again.");
+        showAlert("Error", "Incorrect password. Please try again.");
       }else if(error.code === 'auth/invalid-email'){
-        alert("The email address is badly formatted.");
+        showAlert("Error", "The email address is badly formatted.");
       }else{
-        alert("Login failed. Please try again.");
+        showAlert("Error", "Login failed. Please try again.");
         console.log("Login Error: ", error);
       }
     }finally{

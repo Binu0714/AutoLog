@@ -5,6 +5,7 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useLoader } from '@/hooks/useLoader';
 import { addVehicle } from '@/services/vehicleService';
+import { useAlert } from '@/context/alertContext';
 
 const vehicleTypes = [
   { id: 'car', label: 'Car', icon: 'car' },
@@ -22,10 +23,11 @@ export default function VehicleSetup() {
 
   const router = useRouter();
   const { showLoader, hideLoader } = useLoader();
+  const { showAlert } = useAlert();
 
   const handleFinish = async() => {
     if (!name || !plate || !odo || !nextService) {
-      Alert.alert("Wait!", "Please fill in all details to finalize your profile.");
+      showAlert("Wait!", "Please fill in all details to finalize your profile.");
       return;
     }
    
@@ -40,12 +42,12 @@ export default function VehicleSetup() {
             parseInt(nextService)
         );
        
-        alert("Your vehicle has been added successfully!");
+        showAlert("Success", "Your vehicle has been added successfully!");
         router.replace("/(dashboard)/home")
 
     }catch(error){
         console.log("Error adding vehicle: ", error);
-        Alert.alert("Error", "There was an issue adding your vehicle. Please try again.");
+        showAlert("Error", "There was an issue adding your vehicle. Please try again.");
     }finally{
         hideLoader();
     } 

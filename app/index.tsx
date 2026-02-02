@@ -6,11 +6,13 @@ import { useRouter,Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { getVehicleDetails } from '@/services/vehicleService';
 import { useLoader } from '@/hooks/useLoader';
+import { useAlert } from '@/context/alertContext'
 
 function WelcomeScreen() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { showLoader, hideLoader } = useLoader();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const checkVehicleAndNavigate = async () => {
@@ -27,7 +29,7 @@ function WelcomeScreen() {
           }
         }catch(error){
           console.log("Error fetching vehicle details: ", error);
-          alert("There was an issue fetching your vehicle details. Please try again.");
+          showAlert("Error", "There was an issue retrieving your vehicle details. Please try again.");
           router.replace('/setup');
         }finally{
           hideLoader();

@@ -4,6 +4,7 @@ import { Slot } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LoaderProvider } from '@/context/LoaderContext'
 import { AuthProvider } from '@/context/AuthContext'
+import { AlertProvider } from '@/context/alertContext'
 
 const RootLayout = () => {
 
@@ -12,15 +13,15 @@ const RootLayout = () => {
     console.log(insets)
 
   return (
-    // <SafeAreaView className='flex-1'>
     <LoaderProvider>
+      <AlertProvider>
       <AuthProvider>
         <View style={{flex: 1}}>
              <Slot />
         </View>
       </AuthProvider>
+      </AlertProvider>
     </LoaderProvider>
-    // </SafeAreaView>
   )
 }
 

@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { registerUser } from '@/services/authService';
 import { useLoader } from '../../hooks/useLoader';  
-import { Alert } from "react-native";
+import { useAlert } from '@/context/alertContext';
 
 const Register = () => {
 
@@ -17,14 +17,16 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const { showAlert } = useAlert();
+
   const handleRegister = async () => {
     if(!name || !email || !password || isLoading){
-        alert("All Feilds are Required. Please fill all the fields.");
+        showAlert("Wait!", "All Fields are Required. Please fill all the fields.");
         return;
       }
 
       if(password.length < 6){
-        alert("Password should be at least 6 characters long.");
+        showAlert("Wait!", "Password should be at least 6 characters long.");
         return;
       }
 
@@ -37,9 +39,9 @@ const Register = () => {
     }catch(error: any){
 
       if(error.code === 'auth/email-already-in-use'){
-        alert("The email address is already in use by another account.");
+        showAlert("Error", "The email address is already in use by another account.");
       }else{
-        alert("Registration failed. Please try again.");
+        showAlert("Error", "Registration failed. Please try again.");
         console.log("Registration Error: ", error);
       }
     }finally{
