@@ -3,9 +3,9 @@ import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const tabs = [
-    { name: 'home', icon: 'home', title: 'Home' },        // Changed from 'home' to 'index'
+    { name: 'home', icon: 'home', title: 'Home' },        
     { name: 'add', icon: 'add-circle', title: 'Add Log' },
-    { name: 'history', icon: 'history', title: 'History' }, 
+    { name: 'glovebox', icon: 'assignment', title: 'GloveBox' }, 
     { name: 'profile', icon: 'person', title: 'Profile' },  
 ] as const;
 
