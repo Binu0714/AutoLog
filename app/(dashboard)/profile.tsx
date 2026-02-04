@@ -64,9 +64,13 @@ export default function Profile() {
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <StatusBar barStyle="light-content" />
-      <ScrollView className="px-6" showsVerticalScrollIndicator={false}>
+      <ScrollView className="px-6 pt-4" showsVerticalScrollIndicator={false}>
+
+        <View className="mt-4 mb-2">
+            <Text className="text-white text-4xl font-bold tracking-tight">User Profile</Text>
+            <Text className="text-slate-500 text-lg mt-1 font-medium">Manage your account details</Text>
+        </View>
         
-        {/* --- 1. USER PROFILE HEADER --- */}
         <View className="bg-[#1E1E1E] p-8 rounded-[40px] border border-white/5 items-center mt-6 mb-8">
           <View className="w-24 h-24 bg-[#121212] rounded-full items-center justify-center border-4 border-[#FACC15] mb-4">
              <Text className="text-[#FACC15] text-4xl font-black">
@@ -82,18 +86,6 @@ export default function Profile() {
           >
             <Text className="text-black font-black text-xs uppercase tracking-widest">Edit Profile</Text>
           </TouchableOpacity>
-        </View>
-
-        {/* --- 2. GARAGE INSIGHTS --- */}
-        <View className="flex-row justify-between mb-10">
-            <View className="bg-[#1E1E1E] w-[48%] p-6 rounded-[35px] border border-white/5 items-center">
-                <Text className="text-[#FACC15] text-2xl font-black">{vehicles.length}</Text>
-                <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">Vehicles</Text>
-            </View>
-            <View className="bg-[#1E1E1E] w-[48%] p-6 rounded-[35px] border border-white/5 items-center">
-                <Text className="text-green-500 text-2xl font-black">Active</Text>
-                <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">Status</Text>
-            </View>
         </View>
 
         {/* --- 3. MY GARAGE --- */}
@@ -154,25 +146,54 @@ export default function Profile() {
       {/* --- MODAL: EDIT USER --- */}
       <Modal visible={userModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black/80">
-          <View className="bg-[#1E1E1E] rounded-t-[45px] p-10 border-t border-white/10">
-            <Text className="text-white text-2xl font-black mb-8 uppercase tracking-widest text-center">Update Profile</Text>
-            <TextInput 
-              value={userName} onChangeText={setUserName}
-              className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 mb-8 font-bold"
-              placeholder="Display Name" placeholderTextColor="#4b5563"
-            />
-            <TextInput 
-              value={email} onChangeText={setEmail}
-              className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 mb-8 font-bold"
-              placeholder="Email" placeholderTextColor="#4b5563"
-            />
-            <TouchableOpacity onPress={handleUpdateUser} className="bg-[#FACC15] py-5 rounded-full items-center shadow-lg shadow-yellow-500/20">
-              <Text className="text-black font-black uppercase tracking-widest">Save Changes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setUserModalVisible(false)} className="mt-6 items-center">
-              <Text className="text-slate-500 font-bold uppercase tracking-widest text-xs">Close</Text>
-            </TouchableOpacity>
-          </View>
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View className="bg-[#1E1E1E] rounded-t-[45px] p-10 border-t border-white/10 shadow-2xl">
+              <Text className="text-white text-2xl font-black mb-8 uppercase tracking-widest text-center">Update Profile</Text>
+
+              <View className="gap-y-6 mb-10">
+                {/* Display Name Group */}
+                <View>
+                  <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Full Name</Text>
+                  <TextInput 
+                    value={userName} 
+                    onChangeText={setUserName}
+                    className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
+                    placeholder="Display Name" 
+                    placeholderTextColor="#4b5563"
+                  />
+                </View>
+
+                {/* Email Group */}
+                <View>
+                  <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Email Address</Text>
+                  <TextInput 
+                    value={email} 
+                    onChangeText={setEmail}
+                    className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
+                    placeholder="Email" 
+                    placeholderTextColor="#4b5563"
+                    keyboardType="email-address"
+                    autoCapitalize="none"  
+                  />
+                  
+                </View>
+              </View>
+
+              <TouchableOpacity 
+                onPress={handleUpdateUser} 
+                className="bg-[#FACC15] py-5 rounded-full items-center shadow-lg shadow-yellow-500/20"
+              >
+                <Text className="text-black font-black uppercase tracking-widest">Save Changes</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                onPress={() => setUserModalVisible(false)} 
+                className="mt-6 items-center"
+              >
+                <Text className="text-slate-500 font-bold uppercase tracking-widest text-xs">Close</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </View>
       </Modal>
 
@@ -183,28 +204,40 @@ export default function Profile() {
             <View className="bg-[#1E1E1E] rounded-t-[45px] p-10 border-t border-white/10">
               <Text className="text-white text-2xl font-black mb-8 uppercase tracking-widest text-center">Manage Vehicle</Text>
               
-              <View className="gap-y-5 mb-10">
-                <TextInput 
-                  value={vName} onChangeText={setVName}
-                  className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
-                  placeholder="Nickname" placeholderTextColor="#4b5563"
-                />
-                <TextInput 
-                  value={vPlate} onChangeText={setVPlate}
-                  className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
-                  placeholder="Plate No" placeholderTextColor="#4b5563"
-                />
-                <TextInput 
-                  value={vOdo} onChangeText={setVOdo}
-                  keyboardType="numeric"
-                  className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
-                  placeholder="Odometer" placeholderTextColor="#4b5563"
-                />
+              <View className="gap-y-6 mb-10">
+                <View>
+                  <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Vehicle Name</Text>
+                  <TextInput 
+                    value={vName} onChangeText={setVName}
+                    className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
+                    placeholder="e.g. My Beast" placeholderTextColor="#4b5563"
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Plate Number</Text>
+                  <TextInput 
+                    value={vPlate} onChangeText={setVPlate}
+                    className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
+                    placeholder="e.g. CAS-XXXX" placeholderTextColor="#4b5563"
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Current Odometer (KM)</Text>
+                  <TextInput 
+                    value={vOdo} onChangeText={setVOdo}
+                    keyboardType="numeric"
+                    className="bg-[#121212] p-5 rounded-2xl text-[#FACC15] border border-white/5 font-bold"
+                    placeholder="0" placeholderTextColor="#4b5563"
+                  />
+                </View>
               </View>
 
               <TouchableOpacity onPress={saveVehicleChanges} className="bg-[#FACC15] py-5 rounded-full items-center shadow-lg shadow-yellow-500/20">
                 <Text className="text-black font-black uppercase tracking-widest">Update Specs</Text>
               </TouchableOpacity>
+              
               <TouchableOpacity onPress={() => setVehicleModalVisible(false)} className="mt-6 items-center">
                 <Text className="text-slate-500 font-bold uppercase tracking-widest text-xs">Go Back</Text>
               </TouchableOpacity>
