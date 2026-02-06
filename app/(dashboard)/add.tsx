@@ -5,7 +5,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useAlert } from '@/context/alertContext';
+import { addLog } from '@/services/logService';
+import { useLoader } from '@/hooks/useLoader';
 
 export default function AddLog() {
   const [logType, setLogType] = useState<'fuel' | 'service'>('fuel');
@@ -15,6 +17,54 @@ export default function AddLog() {
   const [liters, setLiters] = useState(''); 
   const [serviceCategory, setServiceCategory] = useState(''); 
   const [notes, setNotes] = useState('');
+
+  const { showAlert } = useAlert();
+  const { showLoader, hideLoader } = useLoader();
+
+  const handleSave = async () => {
+    if(!cost || !odo){
+      showAlert("Wait!", "Please fill in the required fields: Cost and Odometer.");
+      return;
+    }
+
+    if(logType === 'fuel' && !liters){
+      showAlert("Wait!", "Please enter the fuel quantity in liters.");
+      return;
+    }
+
+    if(logType === 'service' && !serviceCategory){
+      showAlert("Wait!", "Please specify the service category.");
+      return;
+    }
+
+    showLoader();
+
+    try{
+      const logData = {
+        type: logType,
+        cost: parseFloat(cost),
+        odo: parseInt(odo),
+        notes: notes,
+        ...(logType === 'fuel' ? {liters: parseFloat(liters)} : {serviceCategory: serviceCategory})
+      };
+
+      await addLog(logData);
+
+      showAlert("Success!", `${logType === 'fuel' ? 'Fuel' : 'Service'} log added successfully.`,"success");
+
+      setCost('');
+      setOdo('');
+      setLiters('');
+      setServiceCategory('');
+      setNotes('');
+
+    }catch(error){
+      showAlert("Error", "Failed to save log. Please try again.");
+      console.log("Add Log Error: ", error);
+    }finally{
+      hideLoader();
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -125,6 +175,7 @@ export default function AddLog() {
 
           {/* 3. SAVE BUTTON */}
           <TouchableOpacity 
+            onPress={handleSave}
             activeOpacity={0.8}
             className="bg-[#FACC15] py-6 rounded-[25px] items-center mb-20 shadow-xl shadow-yellow-500/20"
           >
