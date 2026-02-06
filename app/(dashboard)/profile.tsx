@@ -26,7 +26,7 @@ export default function Profile() {
   
   const [userName, setUserName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [setSelectedVehicle] = useState<any>(null);
+  const [selectedVehicle,setSelectedVehicle] = useState<any>(null);
   const [vName, setVName] = useState('');
   const [vPlate, setVPlate] = useState('');
   const [vOdo, setVOdo] = useState('');
@@ -62,8 +62,33 @@ export default function Profile() {
     }
   };
 
-  const saveVehicleChanges = () => {
-    
+  const saveVehicleChanges = async () => {
+   if (!vName.trim() || !vPlate.trim() || !vOdo.trim()) {
+      showAlert("Wait!", "Please fill in all vehicle details.", "warning");
+      return;
+    }
+
+    if (!selectedVehicle.id) {
+      showAlert("Error", "No vehicle selected.", "error");
+      return;
+    }
+
+    showLoader();
+
+    try {
+      await updateVehicle(selectedVehicle.id, vName, vPlate, parseInt(vOdo));
+
+      await fetchProfileData();
+
+      setVehicleModalVisible(false);
+      showAlert("Success!", "Vehicle details updated successfully.", "success");
+
+    }catch(error){
+      showAlert("Error", "Failed to update vehicle. Please try again.");
+      console.error("Update Vehicle Error: ", error);
+    }finally{
+      hideLoader();
+    }
   };
 
   const handleLogout = async () => {
