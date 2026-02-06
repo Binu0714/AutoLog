@@ -127,7 +127,7 @@ export default function AddLog() {
             
             {/* COMMON FIELD: Cost */}
             <View className="mb-6">
-                <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Total Cost ($)</Text>
+                <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Total Cost (RS)</Text>
                 <TextInput
                     placeholder="0.00"
                     placeholderTextColor="#4b5563"

@@ -87,15 +87,49 @@ const Home = () => {
 
           {/* Plate No Card */}
           <View className="flex-1 bg-[#1E1E1E] p-6 rounded-[30px] border border-white/5 items-center">
+
             <View className="bg-blue-500/10 w-12 h-12 rounded-full items-center justify-center mb-4">
               <Ionicons name="card-outline" size={24} color="#3b82f6" />
             </View>
+            
             <Text className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Plate No.</Text>
             <Text className="text-white text-xl font-bold mt-1 text-center">
                 {vehicle?.plate || 'N/A'}
             </Text>
           </View>
         </View>
+
+        <View className="flex-row justify-between gap-x-4 mb-6">
+        {/* Fuel Economy Card */}
+        <View className="flex-1 bg-[#1E1E1E] p-6 rounded-[30px] border border-white/5 items-center">
+
+          <View className="bg-orange-500/10 w-12 h-12 rounded-full items-center justify-center mb-4">
+            <MaterialIcons name="local-gas-station" size={24} color="#f97316" />
+          </View>
+
+          <Text className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Avg. Fuel</Text>
+          <Text className="text-white text-xl font-bold mt-1 text-center">
+           
+            14.2 <Text className="text-xs text-slate-500">km/L</Text>
+          </Text>
+
+        </View>
+
+        {/* Total Expense Card */}
+        <View className="flex-1 bg-[#1E1E1E] p-6 rounded-[30px] border border-white/5 items-center">
+
+          <View className="bg-emerald-500/10 w-12 h-12 rounded-full items-center justify-center mb-4">
+            <Ionicons name="wallet-outline" size={24} color="#10b981" />
+          </View>
+
+          <Text className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Total Spent</Text>
+          <Text className="text-white text-xl font-bold mt-1 text-center">
+          
+            <Text className="text-xs text-slate-500 font-normal">LKR</Text> 45k
+          </Text>
+        </View>
+        
+      </View>
 
         {/* Maintenance Card */}
         <View className="bg-[#FACC15] p-6 rounded-[35px] mb-8 shadow-lg shadow-yellow-500/20">
