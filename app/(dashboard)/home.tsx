@@ -1,26 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { getVehicleDetails } from '@/services/vehicleService';
+import { useFocusEffect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const { user } = useAuth();
   const [vehicle, setVehicle] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const fetchData = async () => {
     try {
-      const data = await getVehicleDetails();
-      setVehicle(data);
-    } catch (error) {
-      console.error("Error loading dashboard data:", error);
-    } finally {
+      const allVehicles = await getVehicleDetails();
+
+      if (allVehicles.length === 0){
+        setVehicle(null);
+        setIsLoading(false);
+        return;
+      }
+
+      const activeId = await AsyncStorage.getItem('activeVehicleId');
+
+      const currentVehicle = allVehicles.find(v => v.id === activeId) || allVehicles[0];
+
+      setVehicle(currentVehicle);
+
+    }catch(error){
+      console.error("Error fetching vehicle details", error);
+    }finally{
       setIsLoading(false);
     }
   };
