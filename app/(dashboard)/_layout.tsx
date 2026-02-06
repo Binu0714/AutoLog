@@ -36,6 +36,14 @@ const DashboardLayout = () => {
           }}
         />
       ))}
+
+      <Tabs.Screen 
+        name="viewLogs" 
+        options={{
+          href: null, 
+        }} 
+      />
+
     </Tabs>
   );
 }

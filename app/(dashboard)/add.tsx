@@ -8,9 +8,12 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useAlert } from '@/context/alertContext';
 import { addLog } from '@/services/logService';
 import { useLoader } from '@/hooks/useLoader';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AddLog() {
   const [logType, setLogType] = useState<'fuel' | 'service'>('fuel');
+  const router = useRouter();
   
   const [cost, setCost] = useState('');
   const [odo, setOdo] = useState('');
@@ -22,6 +25,14 @@ export default function AddLog() {
   const { showLoader, hideLoader } = useLoader();
 
   const handleSave = async () => {
+
+    const activeVehicleId = await AsyncStorage.getItem('activeVehicleId');
+
+    if (!activeVehicleId) {
+        showAlert("Error", "Please select a vehicle in Profile first.", "error");
+        return;
+    }
+
     if(!cost || !odo){
       showAlert("Wait!", "Please fill in the required fields: Cost and Odometer.");
       return;
@@ -48,7 +59,7 @@ export default function AddLog() {
         ...(logType === 'fuel' ? {liters: parseFloat(liters)} : {serviceCategory: serviceCategory})
       };
 
-      await addLog(logData);
+      await addLog(logData, activeVehicleId);
 
       showAlert("Success!", `${logType === 'fuel' ? 'Fuel' : 'Service'} log added successfully.`,"success");
 
@@ -75,10 +86,22 @@ export default function AddLog() {
       >
         <ScrollView className="px-6" showsVerticalScrollIndicator={false}>
           
-          <View className="mt-8 mb-8">
+          <View className="mt-8 mb-8 flex-row justify-between items-center">
+          <View>
             <Text className="text-white text-4xl font-bold tracking-tight">Add Log</Text>
-            <Text className="text-slate-500 text-lg mt-1 font-medium">Keep your records up to date.</Text>
+            <Text className="text-slate-500 text-lg font-medium">Keep records updated.</Text>
           </View>
+          
+          {/* NEW VIEW LOGS BUTTON */}
+          <TouchableOpacity 
+            onPress={() => router.push('/(dashboard)/viewLogs')}
+            className="bg-[#1E1E1E] p-3 rounded-2xl border border-white/5"
+          >
+            <MaterialCommunityIcons name="history" size={24} color="#FACC15" />
+          </TouchableOpacity>
+        </View>
+
+          
 
           {/* 1. CUSTOM TOGGLE (Segmented Control) */}
           <View className="flex-row bg-[#1E1E1E] p-1.5 rounded-[25px] mb-10 border border-white/5">
