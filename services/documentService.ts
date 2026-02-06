@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, orderBy, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const auth = getAuth();
@@ -42,4 +42,13 @@ export const getDocuments = async () => {
         id: doc.id,
         ...doc.data()
     }));
+}
+
+export const deleteDocument = async (docId: string) => {
+    try{
+        const docRef = doc(db, "documents", docId);
+        await deleteDoc(docRef);
+    }catch(error){
+        console.log("Delete Document Error: ", error);
+    }
 }

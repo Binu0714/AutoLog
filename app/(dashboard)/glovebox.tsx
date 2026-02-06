@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useAlert } from '@/context/alertContext';
 import { useLoader } from '@/hooks/useLoader';
-import { saveDocument,getDocuments } from '@/services/documentService';
+import { saveDocument,getDocuments,deleteDocument } from '@/services/documentService';
 
 const getStatusDetails = (expiryDate: string) => {
   if (!expiryDate) return { status: 'n/a', days: 0, color: 'text-slate-500', barWidth: '0%' };
@@ -101,6 +101,35 @@ export default function GloveBox() {
       hideLoader();
     }
   };
+
+  const handleDelete = async() => {
+    if(!selectedDoc?.id) return;
+
+    showAlert(
+    "Remove Document?", 
+    "This action is permanent. Are you sure you want to delete this record?", 
+    "warning", 
+
+    async () => {
+      showLoader();
+      try {
+        await deleteDocument(selectedDoc.id);
+        await fetchDocs();
+        setModalVisible(false);
+        
+        setTimeout(() => {
+            showAlert("Deleted", "Document removed from GloveBox.", "success");
+        }, 500);
+
+      } catch (error) {
+        showAlert("Error", "Could not delete. Check your connection.", "error");
+      } finally {
+        hideLoader();
+      }
+    }
+  );
+    
+  }
 
   return (
       <SafeAreaView className="flex-1 bg-[#121212]">
@@ -225,10 +254,23 @@ export default function GloveBox() {
 
                     <TouchableOpacity 
                         onPress={handleUpdate}
-                        className="bg-[#FACC15] py-5 rounded-[20px] items-center mt-4 mb-6"
+                        className="bg-[#FACC15] py-5 rounded-[20px] items-center mt-4 "
                     >
                         <Text className="text-black font-black text-lg uppercase tracking-widest">Save Changes</Text>
                     </TouchableOpacity>
+
+                    {selectedDoc && (
+                      <TouchableOpacity 
+                        onPress={handleDelete} 
+                        className="py-5 rounded-[20px] items-center border border-red-500/30 bg-red-500/5"
+                      >
+                        <View className="flex-row items-center">
+                          <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                          <Text className="text-red-500 font-bold ml-2 uppercase tracking-[2px] text-lg">Delete Record</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
+
                 </View>
               </View>
             </KeyboardAvoidingView>
