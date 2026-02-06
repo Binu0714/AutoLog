@@ -6,6 +6,7 @@ import { useLoader } from '@/hooks/useLoader';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/services/firebase';
 import { useAlert } from '@/context/alertContext';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
   const router = useRouter();
@@ -41,6 +42,14 @@ export default function Login() {
       hideLoader();
     }
   }
+
+  const handleSocialLogin = (provider: string) => {
+    showAlert(
+      "Coming Soon",
+      `${provider} login is currently under development. Please use your Email and Password for now.`,
+      "warning"
+    );
+  };
   
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -97,15 +106,38 @@ export default function Login() {
           </View>
 
           {/* Social Logins Section */}
-          <View className="mt-10">
-            <Text className="text-slate-500 text-center mb-6">Or continue with</Text>
-            <View className="flex-row justify-between gap-x-4">
-              <TouchableOpacity className="flex-1 bg-[#1E1E1E] py-4 rounded-2xl items-center border border-white/5">
-                <Text className="text-white font-bold"> Apple</Text>
+          <View className="mt-10 mb-6">
+            <Text className="text-slate-500 text-center mb-8 font-medium">Or continue with</Text>
+            
+            <View className="flex-row justify-center gap-x-8">
+              
+              {/* Facebook Circular Button */}
+              <TouchableOpacity 
+                onPress={() => handleSocialLogin('Facebook')}
+                activeOpacity={0.7}
+                className="w-16 h-16 rounded-full bg-white/5 items-center justify-center border border-white/10 shadow-sm"
+              >
+                <Ionicons name="logo-facebook" size={28} color="#1877F2" />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-1 bg-white py-4 rounded-2xl items-center">
-                <Text className="text-black font-bold">G Google</Text>
+
+              {/* Apple Circular Button */}
+              <TouchableOpacity 
+                onPress={() => handleSocialLogin('Apple')}
+                activeOpacity={0.7}
+                className="w-16 h-16 rounded-full bg-white/5 items-center justify-center border border-white/10 shadow-sm"
+              >
+                <Ionicons name="logo-apple" size={28} color="white" />
               </TouchableOpacity>
+
+              {/* Google Circular Button */}
+              <TouchableOpacity 
+                onPress={() => handleSocialLogin('Google')}
+                activeOpacity={0.7}
+                className="w-16 h-16 rounded-full bg-white/5 items-center justify-center border border-white/10 shadow-sm"
+              >
+                <Ionicons name="logo-google" size={28} color="#EA4335" />
+              </TouchableOpacity>
+
             </View>
           </View>
 
