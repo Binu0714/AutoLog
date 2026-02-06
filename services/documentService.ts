@@ -5,10 +5,10 @@ import { db } from "./firebase";
 const auth = getAuth();
 const documentCollection = collection(db, "documents");
 
-export const saveDocument = async (title: string, expiryDate: string, docId?: string) => {
+export const saveDocument = async (title: string, expiryDate: string, vehicleId: string, docId?: string) => {
     const user = auth.currentUser;
 
-    if (!user) return;
+    if (!user || !vehicleId) return;
 
     if (docId) {
         // update existing document
@@ -24,18 +24,19 @@ export const saveDocument = async (title: string, expiryDate: string, docId?: st
         await addDoc(documentCollection, {
             title,
             expiryDate,
+            vehicleId,
             userId: user.uid,
             createdAt: new Date().toISOString()
         });
     }
 }
 
-export const getDocuments = async () => {
+export const getDocuments = async (vehicleId: string) => {
     const user = auth.currentUser;
 
-    if (!user) return [];
+    if (!user || !vehicleId) return [];
 
-    const q = query(documentCollection, where("userId", "==", user.uid));
+    const q = query(documentCollection, where("vehicleId", "==", vehicleId));
     const snapshot = await getDocs(q);
 
     return snapshot.docs.map(doc => ({

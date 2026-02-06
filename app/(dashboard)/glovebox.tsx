@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, use } from 'react';
 import { 
   View, Text, ScrollView, TouchableOpacity, 
   StatusBar, Modal, TextInput, KeyboardAvoidingView, Platform 
@@ -8,6 +8,8 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useAlert } from '@/context/alertContext';
 import { useLoader } from '@/hooks/useLoader';
 import { saveDocument,getDocuments,deleteDocument } from '@/services/documentService';
+import { useFocusEffect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getStatusDetails = (expiryDate: string) => {
   if (!expiryDate) return { status: 'n/a', days: 0, color: 'text-slate-500', barWidth: '0%' };
@@ -37,19 +39,31 @@ export default function GloveBox() {
   const { showAlert } = useAlert();
   const { showLoader, hideLoader } = useLoader();
 
+  const [activeVehicleId, setActiveVehicleId] = useState<string | null>(null);
   const [documents, setDocuments] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<any>(null);
   const [tempTitle, setTempTitle] = useState('');
   const [tempDate, setTempDate] = useState('');
 
-  useEffect(() => {
-    fetchDocs();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDocs();
+    }, [])
+  );
 
   const fetchDocs = async () => {
-    const data = await getDocuments();
-    setDocuments(data);
+    try {
+      const activeId = await AsyncStorage.getItem('activeVehicleId');
+      setActiveVehicleId(activeId);
+
+      if (activeId) {
+        const docs = await getDocuments(activeId);
+        setDocuments(docs);
+      }
+    }catch(error){
+      console.error("Error fetching documents", error);
+    }
   }
 
   const handleEdit = (doc: any) => {
@@ -88,10 +102,19 @@ export default function GloveBox() {
       return;
     }
 
+    if (!activeVehicleId) {
+      showAlert(
+        "No Active Vehicle", 
+        "Please select an active vehicle in your profile before adding documents.", 
+        "warning"
+      );
+      return;
+    }
+
     showLoader();
 
     try{
-      await saveDocument(tempTitle, tempDate, selectedDoc?.id);
+      await saveDocument(tempTitle, tempDate, activeVehicleId, selectedDoc?.id);
       await fetchDocs();
       setModalVisible(false);
       showAlert("Success!", "Document saved successfully.", "success");
