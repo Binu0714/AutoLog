@@ -30,7 +30,7 @@ export const addVehicle = async (
 export const getVehicleDetails = async () => {
     const user = auth.currentUser;
 
-    if (!user) return null;
+    if (!user) return [];
 
     const q = query(
         vehiclesCollection,
@@ -39,24 +39,10 @@ export const getVehicleDetails = async () => {
 
     const snapshot = await getDocs(q);
 
-    if (snapshot.empty) {
-        return null;
-    }
-
-    const vehicles = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return{
-            id: doc.id,
-            type: data.type,
-            name: data.name,
-            plate: data.plate,
-            odo: data.odo,
-            nextService: data.nextService,
-            createdAt: data.createdAt
-        };
-    });
-
-    return vehicles[0]
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
 }
 
 export const updateVehicle = async (docId: string, name:string, plate:string, odo:number) => {

@@ -13,6 +13,7 @@ import { getVehicleDetails } from '@/services/vehicleService';
 import { auth } from '@/services/firebase';
 import { updateProfile } from 'firebase/auth';
 import { updateVehicle } from '@/services/vehicleService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function Profile() {
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [userModalVisible, setUserModalVisible] = useState(false);
   const [vehicleModalVisible, setVehicleModalVisible] = useState(false);
+  const [activeVehicleId, setActiveVehicleId] = useState<string | null>(null);
   
   const [userName, setUserName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -33,12 +35,57 @@ export default function Profile() {
 
   useEffect(() => {
     fetchProfileData();
+    loadActiveVehicle();
   }, []);
+
+  const loadActiveVehicle = async () => {
+    const id = await AsyncStorage.getItem('activeVehicleId');
+    setActiveVehicleId(id);
+  }
 
   const fetchProfileData = async () => {
     const data = await getVehicleDetails();
-    if (data) setVehicles([data]);
+    setVehicles(data);
+
+    if (data.length > 0 && !activeVehicleId) {
+      const firstId = data[0].id;
+      await AsyncStorage.setItem('activeVehicleId', firstId);
+      setActiveVehicleId(firstId);
+    }
   };
+
+  const handleSelectActive = async () => {
+    showAlert(
+      "Switch Vehicle?", 
+      `Would you like to set ${selectedVehicle.name} as your primary vehicle?`, 
+      "success", 
+
+      async () => {
+        try {
+          showLoader();
+
+          await AsyncStorage.setItem('activeVehicleId', selectedVehicle.id);
+          setActiveVehicleId(selectedVehicle.id);
+
+          setVehicleModalVisible(false);
+
+          hideLoader();
+
+          setTimeout(() => {
+              showAlert(
+                "Success! 🏁", 
+                `${selectedVehicle.name} is now active.`, 
+                "success"
+              );
+            }, 500);
+
+        }catch(error){
+          hideLoader();
+          showAlert("Error", "Failed to switch active vehicle. Please try again.", "error");
+        }
+      }
+    )
+  }
 
   const handleUpdateUser = async() => {
     if(!userName.trim()){
@@ -112,6 +159,17 @@ export default function Profile() {
     )
   };
 
+  const addNewVehicle = () => {
+    showAlert(
+      "Add New Vehicle?", 
+      "You will be taken to the setup wizard to register a new vehicle in your digital garage.", 
+      "success", 
+      () => {
+        router.push('/setup'); 
+      }
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <StatusBar barStyle="light-content" />
@@ -170,7 +228,7 @@ export default function Profile() {
 
           {/* ADD NEW VEHICLE BUTTON (Placed below current vehicles) */}
           <TouchableOpacity 
-            onPress={() => router.push('/setup')}
+            onPress={addNewVehicle}
             className="border-2 border-dashed border-white/10 p-8 rounded-[35px] items-center flex-row justify-center mt-2"
           >
             <Ionicons name="add-circle-outline" size={28} color="#FACC15" />
@@ -257,6 +315,15 @@ export default function Profile() {
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <View className="bg-[#1E1E1E] rounded-t-[45px] p-10 border-t border-white/10">
               <Text className="text-white text-2xl font-black mb-8 uppercase tracking-widest text-center">Manage Vehicle</Text>
+
+            {activeVehicleId !== selectedVehicle?.id && (
+              <TouchableOpacity 
+                onPress={handleSelectActive}
+                className="bg-white/5 py-4 rounded-2xl items-center border border-white/10 mb-8"
+              >
+                <Text className="text-white font-bold uppercase tracking-widest text-xs">Set as Primary Vehicle</Text>
+              </TouchableOpacity>
+            )}
               
               <View className="gap-y-6 mb-10">
                 <View>
