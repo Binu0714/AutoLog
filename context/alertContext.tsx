@@ -28,7 +28,6 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const handleCancel = () => {
     setVisible(false);
-    // We don't trigger the callback on cancel
   };
 
   return (
@@ -79,7 +78,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   ${data.type === 'error' ? 'bg-red-500 shadow-red-500/20' : 'bg-[#FACC15] shadow-yellow-500/20'}`}
               >
                 <Text className="text-black font-black uppercase tracking-widest text-xs">
-                  {data.type === 'warning' ? 'Delete' : 'Got it'}
+                  {data.type === 'warning' ? 'Yes' : 'Got it'}
                 </Text>
               </TouchableOpacity>
 

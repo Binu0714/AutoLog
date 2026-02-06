@@ -91,9 +91,25 @@ export default function Profile() {
     }
   };
 
-  const handleLogout = async () => {
-    await auth.signOut();
-    router.replace('/');
+  const handleLogout = () => {
+    showAlert(
+      "Confirm Logout",
+      "Are you sure you want to sign out?",
+      "warning",
+
+      async () => {
+        showLoader();
+
+        try {
+          await auth.signOut();
+          router.replace('/');
+        }catch(error){
+          showAlert("Error", "Failed to sign out. Please try again.", "error");
+        }finally{
+          hideLoader();
+        }
+      }
+    )
   };
 
   return (
