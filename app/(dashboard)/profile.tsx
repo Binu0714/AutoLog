@@ -11,6 +11,8 @@ import { useAlert } from '@/context/alertContext';
 import { useLoader } from '@/hooks/useLoader';
 import { getVehicleDetails } from '@/services/vehicleService';
 import { auth } from '@/services/firebase';
+import { updateProfile } from 'firebase/auth';
+import { updateVehicle } from '@/services/vehicleService';
 
 export default function Profile() {
   const router = useRouter();
@@ -24,7 +26,7 @@ export default function Profile() {
   
   const [userName, setUserName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [selectedVehicle, setSelectedVehicle] = useState<any>(null);
+  const [setSelectedVehicle] = useState<any>(null);
   const [vName, setVName] = useState('');
   const [vPlate, setVPlate] = useState('');
   const [vOdo, setVOdo] = useState('');
@@ -38,22 +40,30 @@ export default function Profile() {
     if (data) setVehicles([data]);
   };
 
-  const handleUpdateUser = () => {
+  const handleUpdateUser = async() => {
+    if(!userName.trim()){
+      showAlert("Wait!", "Display name cannot be empty.", "warning");
+      return;
+    }
+
     showLoader();
-    setTimeout(() => {
+
+    try{
+      if(auth.currentUser){
+        await updateProfile(auth.currentUser, { displayName: userName });
+
+        setUserModalVisible(false);
+        showAlert("Success!", "Profile updated successfully.", "success");
+      }
+    }catch(error){
+      showAlert("Error", "Failed to update profile. Please try again.");
+    }finally{
       hideLoader();
-      setUserModalVisible(false);
-      showAlert("Success", "Profile updated.", "success");
-    }, 1000);
+    }
   };
 
   const saveVehicleChanges = () => {
-    showLoader();
-    setTimeout(() => {
-      hideLoader();
-      setVehicleModalVisible(false);
-      showAlert("Success", "Vehicle details updated.", "success");
-    }, 1000);
+    
   };
 
   const handleLogout = async () => {
@@ -168,13 +178,16 @@ export default function Profile() {
                   <Text className="text-slate-500 text-[10px] font-bold uppercase tracking-[2px] mb-2 ml-1">Email Address</Text>
                   <TextInput 
                     value={email} 
-                    onChangeText={setEmail}
                     className="bg-[#121212] p-5 rounded-2xl text-white border border-white/5 font-bold"
                     placeholder="Email" 
                     placeholderTextColor="#4b5563"
                     keyboardType="email-address"
                     autoCapitalize="none"  
+                    editable={false}
                   />
+                  <Text className="text-slate-600 text-[10px] mt-2 ml-1 italic lowercase">
+                    * Email address is linked to your account and cannot be changed here.
+                  </Text>
                   
                 </View>
               </View>

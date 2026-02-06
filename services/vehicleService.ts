@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const auth = getAuth();
@@ -57,4 +57,17 @@ export const getVehicleDetails = async () => {
     });
 
     return vehicles[0]
+}
+
+export const updateVehicle = async (docId: string, name:string, plate:string, odo:number) => {
+    try{
+        const vehicleRef = doc(db, "vehicles", docId);
+        await updateDoc(vehicleRef, {
+            name,
+            plate,
+            odo: Number(odo)
+        });
+    }catch(error){
+        console.error("Error updating vehicle",error)
+    }
 }
