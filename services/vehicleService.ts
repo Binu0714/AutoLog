@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import { addDoc, collection, query, where, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const auth = getAuth();
@@ -55,5 +55,14 @@ export const updateVehicle = async (docId: string, name:string, plate:string, od
         });
     }catch(error){
         console.error("Error updating vehicle",error)
+    }
+}
+
+export const deleteVehicle = async (docId: string) => {
+    try {
+        const vehicleRef = doc(db, "vehicles", docId);
+        await deleteDoc(vehicleRef);
+    }catch(error){
+        console.error("Error deleting vehicle", error);
     }
 }

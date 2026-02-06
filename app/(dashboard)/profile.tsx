@@ -9,10 +9,9 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useAlert } from '@/context/alertContext'; 
 import { useLoader } from '@/hooks/useLoader';
-import { getVehicleDetails } from '@/services/vehicleService';
+import { getVehicleDetails, updateVehicle, deleteVehicle } from '@/services/vehicleService';
 import { auth } from '@/services/firebase';
 import { updateProfile } from 'firebase/auth';
-import { updateVehicle } from '@/services/vehicleService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
@@ -137,6 +136,41 @@ export default function Profile() {
       hideLoader();
     }
   };
+
+  const handleDeleteVehicle = async () => {
+    if (!selectedVehicle.id) return;
+
+    showAlert(
+      "Confirm Deletion", 
+      `Are you sure you want to delete ${selectedVehicle.name}? This action cannot be undone.`, 
+      "warning",
+
+      async () => {
+        showLoader();
+
+        try {
+          await deleteVehicle(selectedVehicle.id);
+
+          if (activeVehicleId === selectedVehicle.id) {
+            await AsyncStorage.removeItem('activeVehicleId');
+            setActiveVehicleId(null);
+          }
+
+          await fetchProfileData();
+          setVehicleModalVisible(false);
+
+          setTimeout(() => {
+            showAlert("Deleted", "Vehicle removed successfully.", "success");
+          }, 500);
+
+        }catch(error){
+          showAlert("Error", "Failed to delete vehicle. Please try again.", "error");
+        }finally{
+          hideLoader();
+        }
+      }
+    )
+  }
 
   const handleLogout = () => {
     showAlert(
@@ -357,6 +391,16 @@ export default function Profile() {
 
               <TouchableOpacity onPress={saveVehicleChanges} className="bg-[#FACC15] py-5 rounded-full items-center shadow-lg shadow-yellow-500/20">
                 <Text className="text-black font-black uppercase tracking-widest">Update Specs</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                onPress={handleDeleteVehicle}
+                className="mt-4 py-4 rounded-full items-center border border-red-500/30 bg-red-500/5"
+              >
+                <View className="flex-row items-center">
+                  <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  <Text className="text-red-500 font-bold ml-2 uppercase tracking-widest text-xs">Delete Vehicle</Text>
+                </View>
               </TouchableOpacity>
               
               <TouchableOpacity onPress={() => setVehicleModalVisible(false)} className="mt-6 items-center">
