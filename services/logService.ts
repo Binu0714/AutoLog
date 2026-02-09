@@ -55,3 +55,4 @@ export const getTotalSpent = async (vehicleId: string) => {
 
     return total;
 }
+
