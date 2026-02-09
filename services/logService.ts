@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, orderBy, query, where, getDocs } from "firebase/firestore";
+import { addDoc, collection, orderBy, query, where, getDocs, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const auth = getAuth();
@@ -34,4 +34,24 @@ export const getLogsByVehicle = async (vehicleId: string) => {
         id: doc.id,
         ...doc.data()
     }));
+}
+
+export const getTotalSpent = async (vehicleId: string) => {
+    const user = auth.currentUser;
+
+    if (!user || !vehicleId) return 0;
+
+    const q = query(
+        collection(db, "logs"),
+        where("vehicleId", "==", vehicleId),
+    );
+
+    const snapshot = await getDocs(q);
+
+    const total = snapshot.docs.reduce((sum, doc) => {
+        const data = doc.data();
+        return sum + (Number(data.cost) || 0);
+    },0);
+
+    return total;
 }

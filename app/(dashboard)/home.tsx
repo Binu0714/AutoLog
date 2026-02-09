@@ -6,11 +6,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { getVehicleDetails } from '@/services/vehicleService';
 import { useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getTotalSpent } from '@/services/logService';
 
 const Home = () => {
   const { user } = useAuth();
   const [vehicle, setVehicle] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalSpent, setTotalSpent] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -33,6 +35,11 @@ const Home = () => {
       const currentVehicle = allVehicles.find(v => v.id === activeId) || allVehicles[0];
 
       setVehicle(currentVehicle);
+
+      if(currentVehicle?.id){
+        const costSum = await getTotalSpent(currentVehicle.id);
+        setTotalSpent(costSum);
+      }
 
     }catch(error){
       console.error("Error fetching vehicle details", error);
@@ -123,10 +130,14 @@ const Home = () => {
           </View>
 
           <Text className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Total Spent</Text>
-          <Text className="text-white text-xl font-bold mt-1 text-center">
-          
-            <Text className="text-xs text-slate-500 font-normal">LKR</Text> 45k
+  
+          <Text className="text-white text-xl font-bold mt-1 text-center" numberOfLines={1}>
+            <Text className="text-x text-slate-500 font-normal uppercase">LKR  </Text>
+            {totalSpent > 100000 
+              ? `${(totalSpent / 1000).toFixed(1)}k` 
+              : totalSpent.toLocaleString()} 
           </Text>
+
         </View>
         
       </View>
