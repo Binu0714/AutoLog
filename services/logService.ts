@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, orderBy, query, where, getDocs, doc } from "firebase/firestore";
+import { addDoc, collection, orderBy, query, where, getDocs, doc, limit } from "firebase/firestore";
 import { db } from "./firebase";
 
 const auth = getAuth();
@@ -56,3 +56,22 @@ export const getTotalSpent = async (vehicleId: string) => {
     return total;
 }
 
+export const getRecentLogs = async (vehiclid: string) => {
+    if (!vehiclid) return [];
+
+    const logsCollection = collection(db, "logs");
+
+    const q = query(
+        logsCollection,
+        where("vehicleId", "==", vehiclid),
+        orderBy("createdAt", "desc"),
+        limit(2)
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+}
