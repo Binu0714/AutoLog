@@ -1,50 +1,115 @@
-# Welcome to your Expo app 👋
+# AutoLog 🚗 
+**Premium Vehicle Maintenance & Document Management System**
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+AutoLog is a high-end mobile utility application designed for vehicle owners to digitize their maintenance logbooks, track fuel consumption, and manage critical legal documents. Built with a focus on premium user experience (UX) and real-time data synchronization.
 
-## Get started
+---
 
-1. Install dependencies
+## 📦 Mobile Build (APK)
+You can download the compiled Android binary for testing here:
 
-   ```bash
-   npm install
-   ```
+- **Direct Download:** [👉 Download AutoLog APK](https://expo.dev/accounts/binu0714/projects/AutoLog/builds/553455a2-9587-4f09-b882-8fcd45bf672c)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📸 App Screenshots
 
-In the output, you'll find options to open the app in a
+| Welcome Screen | Login Page |
+| :---: | :---: |
+| <img src="./assets/images/screenshots/welcome.jpeg" width="350"> | <img src="./assets/images/screenshots/logIn.jpeg" width="350"> |
+| **Sign Up Page** | **Vehicle Setup** |
+| <img src="./assets/images/screenshots/signUp.jpeg" width="350"> | <img src="./assets/images/screenshots/setup.jpeg" width="350"> |
+| **Home Dashboard** | **Digital Glovebox** |
+| <img src="./assets/images/screenshots/dashboard.jpeg" width="350"> | <img src="./assets/images/screenshots/glovebox.jpeg" width="350"> |
+| **Add Fuel Log** | **Add Service Log** |
+| <img src="./assets/images/screenshots/fuel%20log.jpeg" width="350"> | <img src="./assets/images/screenshots/service%20log.jpeg" width="350"> |
+| **Activity History** | **User Profile** |
+| <img src="./assets/images/screenshots/log%20history.jpeg" width="350"> | <img src="./assets/images/screenshots/rename.jpeg" width="350"> |
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📱 Core Features
+- **Security & Auth:** Secure user registration and login using **Firebase Authentication**.
+- **Smart Onboarding:** Interactive setup wizard to profile specific vehicles (Car, Bike, Van, Lorry).
+- **Dashboard (Read):** Real-time summary of mileage, total vehicle expenditure, and maintenance status.
+- **Activity Logs (Create/Read):** Log fuel refills and service records (Oil changes, repairs) with automated formatting.
+- **Digital Glovebox (CRUD):** A document vault to manage Insurance, Revenue Licenses, and Emission test expiry dates with real-time countdown logic.
+- **Garage Management:** Seamlessly switch between multiple vehicles and update specifications.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🛠️ Technical Stack
+- **Framework:** React Native (Expo SDK 54)
+- **Language:** TypeScript
+- **Styling:** NativeWind (Tailwind CSS)
+- **Database:** Cloud Firestore (NoSQL)
+- **Authentication:** Firebase Auth
+- **Persistence:** AsyncStorage (Local primary vehicle tracking)
+- **Navigation:** Expo Router (File-based routing)
 
-When you're ready, run:
+---
 
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- **Node.js** (v18 or higher)
+- **Expo Go** app on your mobile device OR an **Android Emulator** (Android Studio)
+
+### 2. Installation
 ```bash
-npm run reset-project
+# Clone the repository
+git clone https://github.com/Binu0714/AutoLog.git
+
+# Navigate to the project folder
+cd AutoLog
+
+# Install dependencies
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Environment Configuration
+Create a .env file in the root directory and add your Firebase project credentials. This is required for the app to connect to the backend.
+````
+EXPO_PUBLIC_ApiKey=your_firebase_api_key
+EXPO_PUBLIC_AuthDomain=your_project_id.firebaseapp.com
+EXPO_PUBLIC_ProjectId=your_project_id
+EXPO_PUBLIC_StorageBucket=your_project_id.appspot.com
+EXPO_PUBLIC_MessagingSenderId=your_sender_id
+EXPO_PUBLIC_AppId=your_app_id
+````
 
-## Learn more
+### 4. Running the App
+````
+# Start the Metro Bundler with a clear cache
+npx expo start -c
+````
 
-To learn more about developing your project with Expo, look at the following resources:
+### 📁 Project Architecture
+````
+AutoLog/
+├── app/ # Application routes and layouts (Expo Router)
+├── components/ # Reusable UI elements (Cards, Modals, etc.)
+├── context/ # Global state providers (Auth, Alerts, Loading state)
+├── hooks/ # Custom React hooks
+├── services/ # Firestore and Auth business logic
+├── assets/ # Images, icons, splash screens
+│ ├── images/
+│ └── icons/
+├── .env # Firebase credentials
+├── package.json # Project dependencies
+└── README.md # Project documentation
+````
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+### ✍️ Author
 
-Join our community of developers creating universal apps.
+**Binu Rajakaruna** – Software Engineering Student   
+- **LinkedIn:** (https://www.linkedin.com/feed/)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+
+
+
+
+
+
