@@ -34,7 +34,16 @@ const Register = () => {
 
     try{
       await registerUser(name, email, password);
-      router.replace('/login');
+      
+      showAlert(
+        "Success! 🏁", 
+        "Account created successfully. Let's get started.", 
+        "success", 
+        () => {
+           
+           router.replace('/login'); 
+        }
+      );
 
     }catch(error: any){
 

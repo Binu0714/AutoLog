@@ -12,7 +12,7 @@ export const addLog = async (logData: any, vehicleId: string) => {
 
     await addDoc(logCollection, {
         ...logData,
-        vehicleId,
+        vehicleId:vehicleId,
         userId: user.uid,
         createdAt: new Date().toISOString()
     });
@@ -26,6 +26,7 @@ export const getLogsByVehicle = async (vehicleId: string) => {
     const q = query(
         logCollection,
         where("vehicleId", "==", vehicleId),
+        orderBy("createdAt", "desc")
     );
 
     const snapshot = await getDocs(q);
@@ -56,14 +57,14 @@ export const getTotalSpent = async (vehicleId: string) => {
     return total;
 }
 
-export const getRecentLogs = async (vehiclid: string) => {
-    if (!vehiclid) return [];
+export const getRecentLogs = async (vehicleId: string) => {
+    if (!vehicleId) return [];
 
     const logsCollection = collection(db, "logs");
 
     const q = query(
         logsCollection,
-        where("vehicleId", "==", vehiclid),
+        where("vehicleId", "==", vehicleId),
         orderBy("createdAt", "desc"),
         limit(2)
     );

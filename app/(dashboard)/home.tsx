@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 const Home = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [vehicle, setVehicle] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -173,59 +174,59 @@ const Home = () => {
         </View>
 
         {/* Recent Activity Section */}
-<View className="mb-10 mt-4">
-  <View className="flex-row justify-between items-center mb-5">
-    <Text className="text-white text-xl font-bold tracking-tight">Recent Activity</Text>
-    <TouchableOpacity onPress={() => router.push('/viewLogs')}>
-      <Text className="text-[#FACC15] font-bold">See All</Text>
-    </TouchableOpacity>
-  </View>
+        <View className="mb-10 mt-4">
+          <View className="flex-row justify-between items-center mb-5">
+            <Text className="text-white text-xl font-bold tracking-tight">Recent Activity</Text>
+            <TouchableOpacity onPress={() => router.push('/viewLogs')}>
+              <Text className="text-[#FACC15] font-bold">See All</Text>
+            </TouchableOpacity>
+          </View>
 
-  {recentLogs.length > 0 ? (
-    recentLogs.map((log) => (
-      <View 
-        key={log.id} 
-        className="bg-[#1E1E1E] p-5 rounded-[30px] border border-white/5 mb-4 flex-row items-center shadow-sm"
-      >
-        {/* Type Icon */}
-        <View className={`p-3 rounded-2xl mr-4 ${log.type === 'fuel' ? 'bg-blue-500/10' : 'bg-[#FACC15]/10'}`}>
-          <MaterialCommunityIcons 
-            name={log.type === 'fuel' ? "gas-station" : "wrench"} 
-            size={22} 
-            color={log.type === 'fuel' ? "#3b82f6" : "#FACC15"} 
-          />
-        </View>
+          {recentLogs.length > 0 ? (
+            recentLogs.map((log) => (
+              <View 
+                key={log.id} 
+                className="bg-[#1E1E1E] p-5 rounded-[30px] border border-white/5 mb-4 flex-row items-center shadow-sm"
+              >
+                {/* Type Icon */}
+                <View className={`p-3 rounded-2xl mr-4 ${log.type === 'fuel' ? 'bg-blue-500/10' : 'bg-[#FACC15]/10'}`}>
+                  <MaterialCommunityIcons 
+                    name={log.type === 'fuel' ? "gas-station" : "wrench"} 
+                    size={22} 
+                    color={log.type === 'fuel' ? "#3b82f6" : "#FACC15"} 
+                  />
+                </View>
 
-        {/* Content */}
-        <View className="flex-1">
-          <Text className="text-white font-bold text-base">
-            {log.type === 'fuel' ? 'Fuel Refill' : log.serviceCategory}
-          </Text>
-          <Text className="text-slate-500 text-xs mt-0.5">
-            {new Date(log.createdAt).toLocaleDateString()} • {log.odo.toLocaleString()} km
-          </Text>
-        </View>
+                {/* Content */}
+                <View className="flex-1">
+                  <Text className="text-white font-bold text-base">
+                    {log.type === 'fuel' ? 'Fuel Refill' : log.serviceCategory}
+                  </Text>
+                  <Text className="text-slate-500 text-xs mt-0.5">
+                    {new Date(log.createdAt).toLocaleDateString()} • {log.odo.toLocaleString()} km
+                  </Text>
+                </View>
 
-        {/* Cost */}
-        <View className="items-end">
-          <Text className="text-white font-black text-sm">LKR {log.cost.toLocaleString()}</Text>
+                {/* Cost */}
+                <View className="items-end">
+                  <Text className="text-white font-black text-sm">LKR {log.cost.toLocaleString()}</Text>
+                </View>
+              </View>
+            ))
+          ) : (
+            /* Empty State */
+            <View className="bg-[#1E1E1E] p-10 rounded-[35px] items-center border border-white/5">
+              <MaterialCommunityIcons name="clipboard-text-outline" size={40} color="#334155" />
+              <Text className="text-slate-500 font-medium mt-4">No logs recorded yet.</Text>
+              <TouchableOpacity 
+                onPress={() => router.push('/add')} 
+                className="mt-2"
+              >
+                <Text className="text-[#FACC15] font-bold">Add your first log</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-      </View>
-    ))
-  ) : (
-    /* Empty State */
-    <View className="bg-[#1E1E1E] p-10 rounded-[35px] items-center border border-white/5">
-      <MaterialCommunityIcons name="clipboard-text-outline" size={40} color="#334155" />
-      <Text className="text-slate-500 font-medium mt-4">No logs recorded yet.</Text>
-      <TouchableOpacity 
-        onPress={() => router.push('/add')} 
-        className="mt-2"
-      >
-        <Text className="text-[#FACC15] font-bold">Add your first log</Text>
-      </TouchableOpacity>
-    </View>
-  )}
-</View>
 
       </ScrollView>
     </SafeAreaView>

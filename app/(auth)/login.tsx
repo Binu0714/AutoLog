@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/services/firebase';
 import { useAlert } from '@/context/alertContext';
 import { Ionicons } from '@expo/vector-icons';
+import { getVehicleDetails } from '@/services/vehicleService';
 
 export default function Login() {
   const router = useRouter();
@@ -23,9 +24,40 @@ export default function Login() {
       return;
     }
 
+    showLoader();
+
     try{
       await signInWithEmailAndPassword(auth, email, password);
-      router.replace('/(dashboard)/home');
+      
+      const vehicles = await getVehicleDetails();
+      console.log("Firestore Result for Vehicle:", vehicles);
+
+      if(vehicles && vehicles.length > 0){
+        console.log("Vehicle details found, navigating to home.");
+        
+        showAlert(
+        "Success! 🏁", 
+        "Login Success. You Will be redirected to your dashboard.", 
+        "success", 
+          () => {
+            
+            router.replace('/home'); 
+          }
+        );
+
+      }else{
+        console.log("No vehicle details found, navigating to setup.");
+
+        showAlert(
+        "Success! 🏁", 
+        "Login Success. Before you start, let's set up your vehicle details.", 
+        "success", 
+          () => {
+            
+            router.replace('/setup'); 
+          }
+        );
+      }
 
     }catch(error: any){
       if(error.code === 'auth/user-not-found'){

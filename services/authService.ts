@@ -1,7 +1,6 @@
 import { createUserWithEmailAndPassword, updateProfile,signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth,db } from './firebase'
 import { doc, setDoc } from 'firebase/firestore'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const registerUser = async (name: string, email: string, password: string) => {
     const userCredentials = await createUserWithEmailAndPassword(

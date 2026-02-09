@@ -23,7 +23,7 @@ function WelcomeScreen() {
           const vehicle = await getVehicleDetails();
 
           if(vehicle){
-            router.replace('/(dashboard)/home');
+            router.replace('/home');
           }else{
             router.replace('/setup');
           }
