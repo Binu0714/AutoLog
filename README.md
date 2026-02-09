@@ -103,7 +103,7 @@ AutoLog/
 ### ✍️ Author
 
 **Binu Rajakaruna** – Software Engineering Student   
-- **LinkedIn:** (https://www.linkedin.com/feed/)
+- **LinkedIn:** ([https://www.linkedin.com/feed/](https://www.linkedin.com/in/binu-jinajith/))
 
 ---
 
