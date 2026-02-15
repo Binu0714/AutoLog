@@ -2,7 +2,7 @@ import "../global.css"
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ImageBackground, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter,Redirect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { getVehicleDetails } from '@/services/vehicleService';
 import { useLoader } from '@/hooks/useLoader';

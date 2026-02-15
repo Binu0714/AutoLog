@@ -1,14 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { getVehicleDetails } from '@/services/vehicleService';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect,useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getTotalSpent,getRecentLogs } from '@/services/logService';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 
 const Home = () => {
   const router = useRouter();
@@ -26,9 +24,10 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
+      
       const allVehicles = await getVehicleDetails();
 
-      if (allVehicles.length === 0){
+      if (!allVehicles || allVehicles.length === 0) {
         setVehicle(null);
         setIsLoading(false);
         return;
@@ -36,22 +35,27 @@ const Home = () => {
 
       const activeId = await AsyncStorage.getItem('activeVehicleId');
 
-      const currentVehicle = allVehicles.find(v => v.id === activeId) || allVehicles[0];
+      let currentVehicle = allVehicles.find(v => v.id === activeId);
 
-      if(currentVehicle){
-        setVehicle(currentVehicle);
-
-        const costSum = await getTotalSpent(currentVehicle.id);
-        setTotalSpent(costSum);
-
-        const logs = await getRecentLogs(currentVehicle.id);
-        setRecentLogs(logs);
+      if (!currentVehicle) {
+        currentVehicle = allVehicles[0];
+        await AsyncStorage.setItem('activeVehicleId', currentVehicle.id);
       }
 
-    }catch(error){
-      console.error("Error fetching vehicle details", error);
-    }finally{
-      setIsLoading(false);
+      setVehicle(currentVehicle);
+
+      const [costSum, logs] = await Promise.all([
+        getTotalSpent(currentVehicle.id),
+        getRecentLogs(currentVehicle.id)
+      ]);
+
+      setTotalSpent(costSum);
+      setRecentLogs(logs);
+
+      } catch (error) {
+        console.error("Error fetching vehicle details", error);
+      } finally {
+        setIsLoading(false);
     }
   };
 
@@ -124,7 +128,7 @@ const Home = () => {
           <Text className="text-slate-400 text-xs font-bold uppercase tracking-widest text-center">Avg. Fuel</Text>
           <Text className="text-white text-xl font-bold mt-1 text-center">
            
-            14.2 <Text className="text-xs text-slate-500">km/L</Text>
+            00.0 <Text className="text-xs text-slate-500">km/L</Text>
           </Text>
 
         </View>

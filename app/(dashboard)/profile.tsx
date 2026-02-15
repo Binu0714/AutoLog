@@ -26,7 +26,7 @@ export default function Profile() {
   const [activeVehicleId, setActiveVehicleId] = useState<string | null>(null);
   
   const [userName, setUserName] = useState(user?.displayName || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [email] = useState(user?.email || '');
   const [selectedVehicle,setSelectedVehicle] = useState<any>(null);
   const [vName, setVName] = useState('');
   const [vPlate, setVPlate] = useState('');
