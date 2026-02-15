@@ -8,7 +8,7 @@ AutoLog is a high-end mobile utility application designed for vehicle owners to 
 ## 📦 Mobile Build (APK)
 You can download the compiled Android binary for testing here:
 
-- **Direct Download:** [👉 Download AutoLog APK](https://expo.dev/accounts/binu0714/projects/AutoLog/builds/553455a2-9587-4f09-b882-8fcd45bf672c)
+- **Direct Download:** [👉 Download AutoLog APK](https://expo.dev/accounts/binu0714/projects/AutoLog/builds/247cbe59-99c5-4b16-acf2-a8d3b7a6615d)
 
 ---
 
